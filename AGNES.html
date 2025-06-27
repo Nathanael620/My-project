@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Dschang - Environmental Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    #topbar {
+      background-color: #084c61;
+      color: white;
+      padding: 0.7rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    .title {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .top-buttons button {
+      margin-left: 5px;
+      padding: 6px 10px;
+      border: none;
+      background-color: #ffd700;
+      color: black;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .top-buttons button:hover {
+      background-color: #ffbf00;
+    }
+    #container {
+      display: flex;
+      flex: 1;
+    }
+    #sidebar {
+      width: 300px;
+      background-color: #f4f4f4;
+      padding: 1rem;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+    #map {
+      flex: 1;
+      position: relative;
+    }
+    #legend {
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      font-size: 0.9rem;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div id="topbar">
+    <span class="title">🛰️ Team Dschang | Quarry Environmental Dashboard</span>
+    <div class="top-buttons">
+      <button onclick="toggleExclusiveLayer('ndvi')">NDVI</button>
+      <button onclick="toggleExclusiveLayer('lulc')">LULC</button>
+      <button onclick="toggleExclusiveLayer('slope')">Slope</button>
+      <button onclick="toggleExclusiveLayer('ejs')">EJS Zones</button>
+      <button onclick="toggleExclusiveLayer('buffers')">Buffers</button>
+    </div>
+  </div>
+
+  <div id="container">
+    <div id="sidebar">
+      <h2>📊 Dashboard</h2>
+      <p><strong>Site:</strong> Tchipou Quarry, Bafoussam</p>
+      <p><strong>Focus:</strong> Environmental Justice Monitoring</p>
+
+      <h3>⚠️ Alerts</h3>
+      <ul>
+        <li>🔴 NDVI < 0.2 in core zone</li>
+        <li>🏠 10+ houses affected within 500m</li>
+        <li>🛑 No transparency from mining company</li>
+      </ul>
+
+      <h3>🧮 Justice Score</h3>
+      <p><strong>Zone 1:</strong> 13.3</p>
+      <p><strong>Zone 2:</strong> 26.6</p>
+      <p><strong>Zone 3:</strong> 36.6</p>
+    </div>
+    <div id="map">
+      <div id="legend"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([5.479, 10.41], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const ndviFiles = [
+      { url: 'data/NDVI/NDVI_2020.geojson', color: '#1a9850', name: 'NDVI 2020' },
+      { url: 'data/NDVI/NDVI_2023.geojson', color: '#d73027', name: 'NDVI 2023' }
+    ];
+
+    const lulcFiles = [
+      { url: 'data/LULC 2013/Dense_vegetation 2013.geojson', color: '#1a9850', name: 'Dense Vegetation 2013' },
+      { url: 'data/LULC 2013/farm_lands.geojson', color: '#66bd63', name: 'Farm Lands 2013' },
+      { url: 'data/LULC 2013/Moderate_VEGETATION.geojson', color: '#a6d96a', name: 'Moderate Vegetation 2013' },
+      { url: 'data/LULC 2020/Bare soil 2020.geojson', color: '#fdae61', name: 'Bare Soil 2020' },
+      { url: 'data/LULC 2020/Built up area 2020.geojson', color: '#f46d43', name: 'Built-up Area 2020' },
+      { url: 'data/LULC 2020/Farm land 2020.geojson', color: '#d73027', name: 'Farm Land 2020' },
+      { url: 'data/LULC 2020/Quarry activity 2020.geojson', color: '#a50026', name: 'Quarry Activity 2020' },
+      { url: 'data/LULC 2020/Vegetation 2020.geojson', color: '#fee08b', name: 'Vegetation 2020' }
+    ];
+
+    const slopeFiles = [
+      { url: 'data/Slope/FLAT_slope.shp.geojson', color: '#1f78b4', name: 'FLAT' },
+      { url: 'data/Slope/gentle_slope.geojson', color: '#33a02c', name: 'GENTLE' },
+      { url: 'data/Slope/moderate_slope.geojson', color: '#ff7f00', name: 'MODERATE' },
+      { url: 'data/Slope/Steep_slope.geojson', color: '#e31a1c', name: 'STEEP' },
+      { url: 'data/Slope/VERY_FLAT_slope.geojson', color: '#6a3d9a', name: 'VERY FLAT' }
+    ];
+
+    const ejsFiles = [
+      { url: 'data/EJS_zones/ejs_zone_1.geojson', color: '#e41a1c', name: 'EJS Zone 1' },
+      { url: 'data/EJS_zones/ejs_zone_2.geojson', color: '#377eb8', name: 'EJS Zone 2' },
+      { url: 'data/EJS_zones/ejs_zone_3.geojson', color: '#4daf4a', name: 'EJS Zone 3' }
+    ];
+
+    const buffersFiles = [
+      { url: 'data/BUFER/buffer 500m.geojson', color: '#ff7f00', name: 'Buffer 500m' },
+      { url: 'data/BUFER/buffer 1km.geojson', color: '#984ea3', name: 'Buffer 1km' },
+      { url: 'data/BUFER/buffer 2km.geojson', color: '#377eb8', name: 'Buffer 2km' }
+    ];
+
+    let currentLayerGroup = [];
+
+    function clearCurrentLayers() {
+      currentLayerGroup.forEach(l => map.removeLayer(l));
+      currentLayerGroup = [];
+    }
+
+    function toggleExclusiveLayer(type) {
+      clearCurrentLayers();
+      let files = [];
+      if (type === 'ndvi') files = ndviFiles;
+      if (type === 'lulc') files = lulcFiles;
+      if (type === 'slope') files = slopeFiles;
+      if (type === 'ejs') files = ejsFiles;
+      if (type === 'buffers') files = buffersFiles;
+
+      const legend = document.getElementById('legend');
+      legend.innerHTML = '<strong>🗺️ Légende</strong><br>';
+
+      files.forEach(file => {
+        fetch(file.url)
+          .then(res => res.json())
+          .then(data => {
+            const layer = L.geoJSON(data, {
+              style: { color: file.color, weight: 2, fillOpacity: 0.5 },
+              onEachFeature: (f, l) => l.bindPopup(file.name)
+            }).addTo(map);
+            currentLayerGroup.push(layer);
+            legend.innerHTML += `<div><span style="display:inline-block;width:15px;height:15px;background:${file.color};margin-right:5px;"></span>${file.name}</div>`;
+          })
+          .catch(err => {
+            console.error('Erreur de chargement du fichier :', file.url, err);
+          });
+      });
+    }
+
+    // Exemple d'ajout d'un point statique
+    const myGeoJSON = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": { "name": "Exemple" },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [10.41, 5.479]
+          }
+        }
+      ]
+    };
+    L.geoJSON(myGeoJSON).addTo(map);
+  </script>
+</body>
+</html>
