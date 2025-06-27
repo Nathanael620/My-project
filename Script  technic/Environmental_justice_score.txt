@@ -1,0 +1,72 @@
+Environmental Justice Score (EJS) – Composite Geospatial Indicator
+
+Objective:
+To develop and apply a spatial model for Environmental Justice Score (EJS) to assess the fairness of industrial quarrying activities on the environment and population around the Tchipou quarry site. This score integrates ecological degradation, access to data, and public participation into a single geospatial justice index.
+
+Tools Used:
+- ArcMap 10.8 (buffer analysis, NDVI overlay, zoning)
+- QGIS 3.24.3 (NDVI and slope processing)
+- Excel / Attribute Tables (manual scoring and calculations)
+
+Formula:
+EJS = (P + A + C) / 3
+
+Where:
+- P = Pollution score (based on NDVI and land degradation)
+- A = Accessibility to data score (based on transparency, platform access)
+- C = Community participation score (based on consultation, engagement)
+
+Steps:
+
+1. Define Spatial Zones:
+- Zone 1: Quarry core (direct activity zone)
+- Zone 2: 0–500m buffer (high impact on settlements)
+- Zone 3: 500m–2km buffer (moderate indirect impacts)
+
+2. Pollution Score (P):
+- Based on average NDVI values:
+  - NDVI < 0.2 → P = 20 (severe degradation)
+  - NDVI 0.2–0.3 → P = 40 (moderate)
+  - NDVI > 0.3 → P = 60 (low)
+- Values interpreted from NDVI rasters in QGIS
+
+3. Accessibility Score (A):
+- Determined based on observed data access:
+  - No open data → A = 10
+  - Partial access via platform or community effort → A = 30–50
+  - Full transparency → A = 80+
+
+- At Tchipou, the company (China Longhui) provides **no environmental data** to the public or government. Score: A = 10–30
+
+4. Community Participation Score (C):
+- Based on whether villagers were consulted or involved:
+  - No participation → C = 10
+  - Passive awareness only → C = 20
+  - Active involvement in decisions → C = 50+
+- At Tchipou: No known public consultation. C = 10–20
+
+5. Score Calculation (Sample Values):
+
+| Zone       | P (Pollution) | A (Accessibility) | C (Participation) | EJS Score |
+|------------|----------------|-------------------|--------------------|-----------|
+| Zone 1     | 20             | 10                | 10                 | 13.3      |
+| Zone 2     | 40             | 20                | 20                 | 26.6      |
+| Zone 3     | 60             | 30                | 20                 | 36.6      |
+
+6. Map Output:
+- EJS values classified into:
+  - 0–30 = 🔴 High injustice
+  - 31–60 = 🟠 Medium injustice
+  - 61–100 = 🟢 Low injustice
+- Zones symbolised in ArcMap as graduated color polygons
+
+7. Integration:
+- EJS used in final web platform for justice alerts
+- Influences policy recommendations on:
+  - Community inclusion
+  - Data transparency
+  - Site rehabilitation enforcement
+
+Notes:
+- This is a first-generation composite index based on expert scoring and field-informed assumptions.
+- Future improvements may include population density weighting, wind direction for pollution dispersion, and local interviews.

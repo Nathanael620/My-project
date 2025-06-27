@@ -1,0 +1,56 @@
+NDVI Calculation – QGIS 3.24.3
+
+Objective:
+To compute and analyse the Normalized Difference Vegetation Index (NDVI) for the Tchipou quarry site using Landsat 8 AND  Sentinel-2 imagery for the years 2013, 2020, and 2025. This analysis was used to assess vegetation degradation due to industrial mining activities.
+
+Tools Used:
+- QGIS 3.24.3
+- Raster Calculator
+- 
+
+Steps:
+
+1. Data Preparation:
+- Downloaded Landsat 8 imagery from USGS explorer for the year 2013 (pre-mining)
+- Downloaded Sentinel-2 L1C imagery from Copernicus Open Access Hub for:
+  - 2020 (during mining)
+  - 2025 (post-mining monitoring)
+- Subset the imagery to the study area using a quarry boundary shapefile.
+
+2. Band Selection:
+- Identified relevant landsat 8 bands:
+  - Band 5 (Near Infrared ) 
+  - Band 4 (Red)
+- Identified relevant Sentinel-2 bands:
+  - Band 8 (Near Infrared ) 
+  - Band 4 (Red)
+
+3. NDVI Calculation:
+- Used QGIS Raster Calculator to apply the standard NDVI formula:
+  
+  NDVI = (B8 - B4) / (B8 + B4)
+
+- In Raster Calculator:- Output saved as NDVI_2013.tif, NDVI_2020.tif, NDVI_2025.tif
+
+4. Reclassification:
+- Each NDVI layer was reclassified into vegetation categories:
+- NDVI 0.37 - 0.63: Dense vegetation
+- 0.29–0.36: Moderate vegetation
+- 0.22–0.28: Sparse vegetation
+- < 0.21: Bare soil / no vegetation
+- Reclassification was done using Raster > Reclassify 
+
+5. Visualisation:
+- Color-coded NDVI layers using a green gradient (light to dark)
+- Compared vegetation cover between 2013, 2020, and 2025
+- Exported maps as JPG for use in reports 
+
+6. Output Use:
+- NDVI maps were used for:
+- Assessing vegetation loss
+- Supporting Environmental Justice Score (EJS)
+- Guiding restoration simulation model
+
+Notes:
+- Atmospheric correction was not applied 
+- Accuracy may be affected by cloud cover and seasonal differences

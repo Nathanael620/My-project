@@ -1,0 +1,63 @@
+Restoration Simulation – ArcGIS 10.8
+
+Objective:
+To simulate ecological restoration of the Tchipou quarry site (14 ha) through tree planting, using a 15 meter planting interval to visualize reforestation potential.
+
+Tools Used:
+- ArcMap 10.8
+- Spatial Analyst toolbox
+- Data Management toolbox
+- Quarry boundary polygon
+- NDVI raster (2025)
+- Slope raster 
+
+Steps:
+
+1. Data Preparation:
+- Loaded the following layers into ArcMap:
+  - Quarry boundary shapefile 
+  - NDVI raster 
+  - Slope raster 
+
+2. Identifying Suitable Areas:
+- Used Raster Calculator to isolate zones where:
+  - NDVI < 0.25 indicating degraded land
+  - Slope < 46° safe for planting
+Formula used:
+  Con(("NDVI_2025" < 0.25) & ("Slope" < 46), 1, 0)
+- Output was a binary raster ("1" = suitable planting zones)
+
+3. Raster to Polygon:
+- Converted the binary raster to a polygon using:
+  Conversion Tools > From Raster > Raster to Polygon
+- Output: "plantable_area_polygon"
+
+4. Creating the Planting Grid:
+- Used Data Management > Sampling > Create Fishnet
+- Parameters:
+  - Cell Size Width: 15 meters
+  - Cell Size Height: 15 meters
+  - Extent: matched quarry site boundary
+  - Output type: POLYGON
+
+5. Generating Planting Points:
+- Converted the grid polygons to centroid points using:
+  Data Management > Features > Feature to Point
+- Output: regular grid of points, each representing one tree
+
+6. Clipping Points to Suitable Planting Zones:
+- Used Analysis Tools > Extract > Clip
+- Input Features: tree point layer
+- Clip Feature: plantable_area_polygon
+- Result: final tree planting simulation layer
+
+7. Output and Interpretation:
+- Total number of tree points: 141
+- Each tree spaced at 20m → 1 tree per 225 m²
+- Total restorable area: 31725 m²
+- Map exported as restoration simulation jpg
+- Trees symbolised using trees icons
+
+Notes:
+- This simulation does not yet account for local species types, soil fertility, or community priorities.
+- It serves as a baseline spatial model to guide ecological rehabilitation and policy recommendations.

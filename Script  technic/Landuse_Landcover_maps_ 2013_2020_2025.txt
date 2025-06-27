@@ -1,0 +1,62 @@
+Land Use / Land Cover Classification – ENVI 4.3 and ArcMap 10.8
+
+Objective:
+To classify the land use and land cover (LULC) of the Tchipou quarry site and its surroundings for the years 2013, 2020, and 2025 using multispectral satellite imagery. The goal was to assess changes in land cover due to industrial mining and evaluate post-mining restoration efforts.
+
+Tools Used:
+- ENVI 4.3 
+- ArcMap 10.8 
+- Sentinel-2 and Landsat imagery
+- Quarry boundary shapefile
+
+Steps:
+
+1. Data Preparation:
+- Collected multispectral satellite images for three target years:
+  - 2013 (pre-mining)
+  - 2020 (during mining)
+  - 2025 (monitoring post-mining)
+- Loaded imagery into ENVI 4.3
+- Subset images to the 14-hectare quarry site using the shapefile
+
+
+2. Supervised Classification in ENVI:
+- Defined six land cover classes based on visual inspection and field knowledge:
+  - Quarry activities
+  - Bare soil
+  - Farm lands
+  - Moderate vegetation
+  - Dense vegetation
+  - Built-up areas
+- Used the Maximum Likelihood Classifier (MLC) algorithm
+- Collected training samples for each class using ROIs (Regions of Interest)
+- Performed supervised classification for each year
+
+4. Accuracy Assessment (Manual):
+- Cross-checked classification with Google Earth and known reference points
+- Clas confision matrix was use to verified our work , a Kappa cofficient of 0.99 
+
+5. Export Classified Images:
+- Classification to vector
+- Vector to shapefile
+- Transferred Shapefiles to ArcMap for further processing
+
+6. Post-Processing in ArcMap:
+- Loaded classified LULC layers in ArcMap 10.8
+- Clipped classified maps to the quarry boundary for better accuracy 
+- Used Spatial Analyst → Extraction →  Extract by mask
+- Assigned a unique color to each land use class
+- Created map layout with:
+  - Title
+  - Legend
+  - North arrow
+  - Scale bar
+  - Data source and author info
+
+7. Output:
+- Three LULC maps: LULC_2013, LULC_2020, LULC_2025
+- JPG map exports used in final report
+
+Notes:
+- Changes in land cover between 2013 and 2025 were interpreted to assess environmental degradation and restoration
+- The results were also used for Environmental Justice Score (EJS) analysis and restoration planning

@@ -1,0 +1,59 @@
+Anthropogenic Influence Assessment – ArcMap 10.8
+
+Objective:
+To assess the influence of industrial quarrying activities at the Tchipou site on the surrounding human settlements and environment using spatial buffer analysis.
+
+Tools Used:
+- ArcMap 10.8
+- Analysis Toolbox > Proximity > Buffer
+- Shapefiles: Quarry site boundary, Houses, Rivers, Villages
+
+Steps:
+
+1. Input Layers:
+- Quarry boundary shapefile (Polygon)
+- House locations (Polygon shapefile)
+- Village locations (Point shapefile)
+- River network (Polyline shapefile)
+
+2. Creating Buffer Zones:
+- Used "Buffer" tool from:
+  Analysis Tools > Proximity > Buffer
+- Input: Quarry polygon
+- Buffer distances: 500 meters, 1 kilometer, 2 kilometers
+- Output: Three concentric buffer zones around the quarry site
+
+3. Spatial Overlay and Impact Analysis:
+- Used "Select by Location" and "Spatial Join" tools to identify features within each buffer:
+  - Number of houses inside each buffer
+  - Villages intersected by each buffer
+  - Rivers within or crossing buffer zones
+
+4. Recorded the Following Observations:
+- 500 m buffer:
+  - High impact zone
+  - Direct exposure to noise, dust, vibration
+  - River contamination likely from runoff
+- 1 km buffer:
+  - Moderate impact zone
+  - Possible noise and air pollution exposure
+  - Psychological effects and livestock disturbance
+- 2 km buffer:
+  - Extended influence zone
+  - Affects access roads, farmlands, and water catchments
+
+5. Output:
+- Created a map showing all three buffer zones in concentric rings
+- Overlaid with houses, rivers, and villages
+- Calculated and annotated:
+  - Number of houses affected in each zone
+  - Number of rivers/villages intersected
+
+6. Use in Policy and Justice Analysis:
+- These zones were used to inform the Environmental Justice Score (EJS)
+- Helped justify the need for mitigation measures and environmental alerts in future planning
+
+Notes:
+- Buffering does not account for wind direction or topography
+- Results represent potential influence zones, not direct pollution measurement
+- Ideal for decision-makers and local risk communication

@@ -1,0 +1,62 @@
+Slope Map Generation 
+
+Objective:
+To generate a high-resolution slope map of the Tchipou quarry site using GPS elevation points collected in the field with a Garmin 64s receiver.
+
+Tools Used:
+- ArcMap 10.8
+- Excel
+- Spatial Analyst toolbox
+- 3D Analyst toolbox
+- GPS field data (X, Y, Z coordinates)
+
+Steps:
+
+1. Data Collection:
+- Field survey was conducted across the quarry site
+- A Garmin 64s GPS receiver was used to collect:
+  - Longitude (X)
+  - Latitude (Y)
+  - Elevation (Z)
+- The data was saved as a CSV file  using excel and imported into ArcMap
+
+2. Creation of Elevation Points Layer:
+- CSV file was added to ArcMap via Add XY Data
+- The data was projected into UTM Zone 32N (WGS 84)
+- Points were exported as a shapefile named: "Elevation_Points.shp"
+
+3. Interpolation to Create DEM:
+- The elevation points were interpolated into a raster surface (DEM)
+- Method used: Inverse Distance Weighted (IDW)
+  Toolbox: 3D Analyst Tools > Raster Interpolation > IDW
+- Parameters:
+  - Z field: Elevation
+  - Output cell size: 1 meters 
+- Output: Digital Elevation Model (DEM)
+
+4. Deriving Slope Map:
+- The DEM was processed to derive slope values
+  Toolbox: Spatial Analyst Tools > Surface > Slope
+- Output units: Degree (°)
+- Output: “Slope_Map_Quarry.tif”
+
+5. Classification of Slope:
+- Slope values were reclassified into 5 classes:
+  - Flat (7°)
+  - Gentle (17°)
+  - Moderate (30°)
+  - Steep (45°)
+  - Very Steep (79°)
+- Toolbox: Spatial Analyst > Reclass > Reclassify
+
+6. Visualisation and Output:
+- The classified slope raster was symbolised using a color gradient
+- Map layout was created with title, scale, legend, and north arrow
+- Map exported in Jpg formats
+
+Notes:
+- Slope values were used to:
+  - Identify erosion-sensitive zones
+  - Determine safe zones for tree planting simulation
+  - Contribute to the Environmental Justice Score (EJS)
+
